@@ -3,7 +3,10 @@ register() {
         if [ $# -eq 0 ]; then
                 echo "please input container name"
         elif [ "$(docker ps -a | grep -c "$1")" -eq 0 ]; then
-                docker create --gpus all -i -t --name "$1" nvcr.io/nvidia/pytorch:20.11-py3
+		mkdir ~/project
+		mkdir ~/project/"$1"
+                docker create --gpus all -i -t -v ~/project/"$1":/root/project --name "$1" nvcr.io/nvidia/pytorch:20.11-py3
+		echo "$1 successfully registered!"
         else
                 echo "already exist"
         fi
@@ -22,7 +25,7 @@ login() {
 
 kill_container() {
         if [ $# -eq 0 ]; then
-                echo "no arguments"
+                echo "please input container name"
         else
                 docker rm "$1"
         fi
