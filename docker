@@ -16,7 +16,7 @@ login() {
         if [ "$(docker ps -a | grep -c "$1")" -eq 0 ]; then
                 echo "not exist"
         else
-                if [ "$(docker ps -a | grep "$1" | grep -c Exited)" -ne 0 ]; then
+                if [ "$(docker ps -a | grep "$1" | grep -c Exited)" -ne 0 ] || [ "$(docker ps -a | grep "$1" | grep -c Created)" -ne 0 ]; then
                         docker start "$1"
                 fi
                 docker attach "$1"
