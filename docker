@@ -1,0 +1,29 @@
+
+register() {
+        if [ $# -eq 0 ]; then
+                echo "please input container name"
+        elif [ "$(docker ps -a | grep -c "$1")" -eq 0 ]; then
+                docker create --gpus all -i -t --name "$1" nvcr.io/nvidia/pytorch:20.11-py3
+        else
+                echo "already exist"
+        fi
+}
+
+login() {
+        if [ "$(docker ps -a | grep -c "$1")" -eq 0 ]; then
+                echo "not exist"
+        else
+                if [ "$(docker ps -a | grep "$1" | grep -c Exited)" -eq 0 ]; then
+                        docker start "$1"
+                fi
+                docker attach "$1"
+        fi
+}
+
+kill_container() {
+        if [ $# -eq 0 ]; then
+                echo "no arguments"
+        else
+                docker rm "$1"
+        fi
+}
